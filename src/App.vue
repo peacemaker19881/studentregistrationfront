@@ -13,7 +13,7 @@
         <li><router-link to="/login">Login</router-link></li>
         <li><router-link to="/Admin">Admin</router-link></li>
         <li><router-link to="/student">Student</router-link></li>
-        <li><router-link to="/AboutUs">About Us</router-link></li>
+        <li><router-link to="/about">About Us</router-link></li>
       </ul>
     </nav>
     <router-view />
