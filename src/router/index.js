@@ -34,6 +34,11 @@ const routes = [
     name: 'about',
     component: AboutView
   },
+    {
+    path: '/admin/login',
+    name: 'admin',
+    component: AdminLogin
+  },
   {
   path: "/admin/news",
   component: () => import("../views/AdminNews.vue"),
@@ -43,7 +48,7 @@ const routes = [
     path: '/admin',
     name: 'admin-dashboard',
     component: AdminDashboard,
-    meta: { requiresAdmin: true }
+    //meta: { requiresAdmin: true }
   },
   {
     path: '/:pathMatch(.*)*',
