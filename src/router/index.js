@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import HomeView from '@/views/HomeView.vue'
-import StudentRegister from '@/views/StudentRegister.vue'
-import AboutView from '@/views/AboutView.vue'
-import AdminLogin from '@/views/Admin/AdminLogin.vue'
-import AdminDashboard from '@/views/Admin/AdminDashboard.vue'
-import LoginComponent from '@/views/LoginComponent.vue'
-import NotFound from '@/views/NotFound.vue'
+import HomeView from '@/views/HomeView.vue';
+import StudentRegister from '@/views/StudentRegister.vue';
+import AboutView from '@/views/AboutView.vue';
+import AdminLogin from '@/views/Admin/AdminLogin.vue';
+import AdminDashboard from '@/views/Admin/AdminDashboard.vue';
+import LoginComponent from '@/views/LoginComponent.vue';
+import NotFound from '@/views/NotFound.vue';
 
 // Temporary fake auth (frontend only)
 const isAdminAuthenticated = () => {
