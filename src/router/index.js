@@ -6,6 +6,7 @@ import AboutView from '@/views/AboutView.vue';
 import AdminLogin from '@/views/Admin/AdminLogin.vue';
 import AdminDashboard from '@/views/Admin/AdminDashboard.vue';
 import LoginComponent from '@/views/LoginComponent.vue';
+import ViewDocuments from '@/components/ViewDocuments.vue';
 import NotFound from '@/views/NotFound.vue';
 
 // Temporary fake auth (frontend only)
@@ -33,6 +34,11 @@ const routes = [
     path: '/about',
     name: 'about',
     component: AboutView
+  },
+  {
+    path: '/Documents',
+    name: 'Documents',
+    component: ViewDocuments
   },
     {
     path: '/admin/login',
