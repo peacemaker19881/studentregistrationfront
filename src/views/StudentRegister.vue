@@ -5,7 +5,7 @@
 
       <div class="form-group">
         <label>Full Names</label>
-        <input type="text" v-model="form.names" required />
+        <input type="text" v-model="form.fullname" required />
       </div>
 
       <div class="form-group">
@@ -29,7 +29,12 @@
 
       <div class="form-group">
         <label>Parent Phone</label>
-        <input type="tel" v-model="form.parentphone" placeholder="07XXXXXXXX" required />
+        <input
+          type="tel"
+          v-model="form.parent_phone"
+          placeholder="07XXXXXXXX"
+          required
+        />
       </div>
 
       <div class="form-group">
@@ -60,34 +65,53 @@
         <input type="email" v-model="form.email" required />
       </div>
 
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" v-model="form.password" required />
-      </div>
+      <button class="btn-submit">Register Student</button>
 
-      <button class="btn-submit">Register</button>
+      <p v-if="success" class="success">{{ success }}</p>
+      <p v-if="error" class="error">{{ error }}</p>
     </form>
   </div>
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
+import axios from "axios";
+
+const success = ref("");
+const error = ref("");
 
 const form = reactive({
-  names: "",
+  fullname: "",
   sex: "",
   dob: "",
   address: "",
-  parentphone: "",
+  parent_phone: "",
   trade: "",
   level: "",
-  email: "",
-  password: ""
+  email: ""
 });
 
-const submitForm = () => {
-  console.log("Student Data:", form);
-  alert("Registration submitted successfully!");
+const submitForm = async () => {
+  try {
+    await axios.post(
+      "http://localhost:4000/api/students",
+      form,
+      {
+        headers: {
+          Authorization: localStorage.getItem("token")
+        }
+      }
+    );
+
+    success.value = "Student registered successfully ✔";
+    error.value = "";
+
+    // reset form
+    Object.keys(form).forEach(key => (form[key] = ""));
+  } catch (err) {
+    error.value = "Failed to register student";
+    success.value = "";
+  }
 };
 </script>
 
@@ -149,5 +173,17 @@ input:focus, select:focus {
 
 .btn-submit:hover {
   background: #1b6ca8;
+}
+
+.success {
+  color: green;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.error {
+  color: red;
+  margin-top: 15px;
+  text-align: center;
 }
 </style>

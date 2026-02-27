@@ -3,6 +3,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue';
 import StudentRegister from '@/views/StudentRegister.vue';
 import AboutView from '@/views/AboutView.vue';
+import UploadDocuments from '@/components/UploadDocuments.vue';
+import CommentsComponents from '@/components/CommentsComponents.vue';
 import AdminLogin from '@/views/Admin/AdminLogin.vue';
 import AdminDashboard from '@/views/Admin/AdminDashboard.vue';
 import LoginComponent from '@/views/LoginComponent.vue';
@@ -24,6 +26,16 @@ const routes = [
     path: '/student',
     name: 'student',
     component: StudentRegister
+  },
+  {
+    path: '/upload',
+    name: 'upload',
+    component: UploadDocuments
+  },
+  {
+    path: '/comments',
+    name: 'comments',
+    component: CommentsComponents
   },
   {
     path: '/Login',

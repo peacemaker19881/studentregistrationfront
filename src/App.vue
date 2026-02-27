@@ -11,8 +11,10 @@
       <ul class="nav-links">
         <li><router-link to="/">Home</router-link></li>
         <li><router-link to="/login">Login</router-link></li>
-        <li><router-link to="/Admin">Admin</router-link></li>
-        <li><router-link to="/student">Student</router-link></li>
+        <li><router-link to="/Admin">Post News</router-link></li>
+        <li><router-link to="/comments">Comments</router-link></li>
+        <li><router-link to="/student">Register Student</router-link></li>
+        <li><router-link to="/upload">Upload</router-link></li>
         <li><router-link to="/Documents">Documents</router-link></li>
         <li><router-link to="/about">About Us</router-link></li>
       </ul>

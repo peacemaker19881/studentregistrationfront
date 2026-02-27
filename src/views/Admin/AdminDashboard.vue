@@ -1,107 +1,113 @@
 <template>
-  <div class="admin-container">
-    <div class="admin-card">
-      <h1 class="title">Post News</h1>
+  <div class="news-form">
+    <h2>📰 Post News</h2>
 
-      <form @submit.prevent="submitNews">
-        <div class="form-group">
-          <label>News Title</label>
-          <input type="text" v-model="news.title" required />
-        </div>
+    <input v-model="title" placeholder="News Title" />
+    <textarea v-model="description" placeholder="News Description"></textarea>
+    <input type="date" v-model="news_date" />
+    <input type="file" @change="handleFile" />
 
-        <div class="form-group">
-          <label>News Description</label>
-          <textarea v-model="news.description" rows="4" required></textarea>
-        </div>
+    <button @click="submitNews">Post News</button>
 
-        <div class="form-group">
-          <label>News Date</label>
-          <input type="date" v-model="news.date" required />
-        </div>
-
-        <div class="form-group">
-          <label>News Image</label>
-          <input type="file" @change="handleImage" />
-        </div>
-
-        <button class="btn-submit">Post News</button>
-      </form>
-    </div>
+    <p v-if="success" class="success">{{ success }}</p>
+    <p v-if="error" class="error">{{ error }}</p>
   </div>
 </template>
 
-<script setup>
-import { reactive } from "vue";
+<script>
+import axios from "axios";
 
-const news = reactive({
-  title: "",
-  description: "",
-  date: "",
-  image: ""
-});
+export default {
+  name: "PostNews",
+  data() {
+    return {
+      title: "",
+      description: "",
+      news_date: "",
+      image: null,
+      success: "",
+      error: ""
+    };
+  },
+  methods: {
+    handleFile(e) {
+      this.image = e.target.files[0];
+    },
 
-const handleImage = (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
+    async submitNews() {
+      if (!this.title || !this.description) {
+        this.error = "All fields are required";
+        return;
+      }
 
-  const reader = new FileReader();
-  reader.onload = () => {
-    news.image = reader.result;
-  };
-  reader.readAsDataURL(file);
-};
+      const formData = new FormData();
+      formData.append("title", this.title);
+      formData.append("description", this.description);
+      formData.append("news_date", this.news_date);
+      if (this.image) formData.append("image", this.image);
 
-const submitNews = () => {
-  const existingNews = JSON.parse(localStorage.getItem("news")) || [];
+      try {
+        await axios.post(
+          "http://localhost:4000/api/news",
+          formData,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+              "Content-Type": "multipart/form-data"
+            }
+          }
+        );
 
-  existingNews.unshift({ ...news });
+        this.success = "News posted successfully ✔";
+        this.error = "";
 
-  localStorage.setItem("news", JSON.stringify(existingNews));
-
-  alert("News posted successfully");
-
-  news.title = "";
-  news.description = "";
-  news.date = "";
-  news.image = "";
+        // clear form
+        this.title = "";
+        this.description = "";
+        this.news_date = "";
+        this.image = null;
+      } catch (err) {
+        this.error = "Failed to post news";
+      }
+    }
+  }
 };
 </script>
 
 <style scoped>
-.admin-container {
-  display: flex;
-  justify-content: center;
-  padding: 40px;
-}
-
-.admin-card {
-  width: 400px;
+.news-form {
+  max-width: 600px;
+  margin: auto;
   background: #fff;
   padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 
-.title {
+.news-form h2 {
   text-align: center;
   margin-bottom: 20px;
 }
 
-.form-group {
-  margin-bottom: 15px;
-}
-
-input, textarea {
+.news-form input,
+.news-form textarea {
   width: 100%;
-  padding: 8px;
-}
-
-.btn-submit {
-  width: 100%;
+  margin-bottom: 12px;
   padding: 10px;
-  background: #2c3e50;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.news-form button {
+  width: 100%;
+  padding: 12px;
+  background: #2c7be5;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
+  cursor: pointer;
 }
+
+.success { color: green; margin-top: 10px; }
+.error { color: red; margin-top: 10px; }
 </style>

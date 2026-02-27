@@ -3,7 +3,7 @@
     <div class="footer-content">
       <p class="copyright">
         © {{ currentYear }} — Copyright by
-        <span class="owner">IT Jean de la Paix</span>
+        <span class="owner">GS Bumba TSS Software Development Department</span>
       </p>
       <div class="social-links">
         <a href="https://www.youtube.com" target="_blank" class="youtube">YouTube</a>
