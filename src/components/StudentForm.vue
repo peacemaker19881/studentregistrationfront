@@ -102,7 +102,6 @@ const submitForm = () => {
 
 .registration-card {
   background: white;
-  width: 420px;
   padding: 30px;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0,0,0,.25);
@@ -149,5 +148,25 @@ input:focus, select:focus {
 
 .btn-submit:hover {
   background: #1b6ca8;
+}
+
+.registration-card {
+  width: 100%;
+  max-width: 420px;
+  margin: 20px;
+}
+
+input, select {
+  font-size: 16px; /* Prevent iOS zoom */
+}
+
+@media (max-width: 480px) {
+  .registration-card {
+    padding: 20px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
 }
 </style>
