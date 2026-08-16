@@ -20,7 +20,11 @@
       <h2 class="subtitle">Contact Information</h2>
       <div class="contact-info">
         <p><strong>Location:</strong> Karambi Village ,Bumba Cell ,Mushubati Sector, Rutsiro District ,Rwanda</p>
-        <p><strong>Phone:</strong> +250 788 860 155</p>
+        <p><strong>Phone for school manager:</strong> +250 788787786</p>
+        <p><strong>Phone for Bursar:</strong> +250 788677811</p>
+        <p><strong>Phone for DOS:</strong> +250 781117046 </p>
+        <p><strong>Phone for DOD:</strong> +250 788627855</p>
+        
       </div>
     </div>
   </div>
