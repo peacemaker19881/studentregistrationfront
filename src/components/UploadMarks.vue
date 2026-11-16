@@ -32,7 +32,7 @@
 
 <script setup>
 import { ref } from "vue";
-import axios from "axios";
+import { api } from "@/services/api";
 
 const file = ref(null);
 const uploading = ref(false);
@@ -56,9 +56,7 @@ const uploadMarks = async () => {
   errorMessage.value = "";
 
   try {
-    const response = await axios.post("http://localhost:4000/api/marks/upload", formData, {
-      headers: { Authorization: localStorage.getItem("token") }
-    });
+    const response = await api.post("/marks/upload", formData);
     successMessage.value = response.data?.message || "Marks uploaded successfully.";
     file.value = null;
     document.getElementById("marks-file").value = "";

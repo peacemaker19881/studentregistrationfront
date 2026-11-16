@@ -1,38 +1,71 @@
-# studentregistration
+# GS BUMBA TSS Student Registration
 
-This template should help get you started developing with Vue 3 in Vite.
+Vue 3/Vite frontend with a Node.js/Express API and MySQL database.
 
-## Recommended IDE Setup
+## Requirements
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- Node.js 20 or newer
+- MySQL 8 or compatible MySQL server
 
-## Recommended Browser Setup
+## Local setup
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+1. Install frontend packages from the project root:
 
-## Customize configuration
+   ```sh
+   npm install
+   ```
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+2. Install API packages:
 
-## Project Setup
+   ```sh
+   npm --prefix backend install
+   ```
 
-```sh
-npm install
-```
+3. Copy `backend/.env.example` to `backend/.env`. Set the MySQL connection values and a random `JWT_SECRET` of at least 32 characters. Set `ADMIN_EMAIL` and a strong `ADMIN_PASSWORD` (at least 12 characters) for the initial administrator.
 
-### Compile and Hot-Reload for Development
+4. Create the MySQL database:
 
-```sh
-npm run dev
-```
+   ```sh
+   npm run backend:init-db
+   ```
 
-### Compile and Minify for Production
+   The API creates its tables automatically on startup.
 
-```sh
-npm run build
-```
+5. Create the initial admin account:
+
+   ```sh
+   npm run backend:create-admin
+   ```
+
+6. In one terminal start the API; in another start the Vue app:
+
+   ```sh
+   npm run backend:dev
+   npm run dev
+   ```
+
+The API listens on `http://localhost:4000`; Vite uses `http://localhost:5173`. To use another API URL, set `VITE_API_URL` to the API's `/api` URL, such as `https://api.example.com/api`. Add the deployed frontend origin to `FRONTEND_ORIGINS` in the API environment.
+
+## Included features
+
+- Student registration with a student login account and generated registration number
+- Student and administrator login using hashed passwords and signed, expiring tokens
+- Admin student list and deletion
+- Student-specific marks viewing and administrator Excel (`.xlsx`) marks upload
+- Public course-document downloads and administrator document upload
+- Public school news and administrator news/image publishing
+- Student comments and administrator comment viewing
+
+Uploaded files are stored under `backend/uploads`; production deployments must use persistent storage and back up the MySQL database and uploaded files. The API requires HTTPS and secure production environment values when deployed.
+
+## API routes
+
+- `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me`
+- `GET /api/students`, `DELETE /api/students/:id` (admin)
+- `GET /api/marks/my`, `POST /api/marks/upload` (authenticated/admin respectively)
+- `GET /api/documents`, `POST /api/documents` (admin)
+- `GET /api/news`, `POST /api/news` (admin)
+- `POST /api/comments` (student), `GET /api/comments` (admin)
+- `GET /api/health`
+
+Authenticated API calls use `Authorization: Bearer <token>`. Excel uploads must include registration number, level, subject, term, score, and maximum score columns; grade is optional. Re-uploading the same student's subject and term updates that result.

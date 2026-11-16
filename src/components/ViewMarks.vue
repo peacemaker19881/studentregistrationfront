@@ -74,7 +74,7 @@
 
 <script setup>
 import { computed, onMounted, ref } from "vue";
-import axios from "axios";
+import { api } from "@/services/api";
 
 const marks = ref([]);
 const loading = ref(false);
@@ -104,9 +104,7 @@ const fetchMarks = async () => {
   errorMessage.value = "";
 
   try {
-    const response = await axios.get("http://localhost:4000/api/marks/my", {
-      headers: { Authorization: localStorage.getItem("token") }
-    });
+    const response = await api.get("/marks/my");
     const records = Array.isArray(response.data) ? response.data : response.data?.marks;
 
     if (!Array.isArray(records)) {

@@ -13,9 +13,8 @@ import ViewMarks from '@/components/ViewMarks.vue';
 import UploadMarks from '@/components/UploadMarks.vue';
 import NotFound from '@/views/NotFound.vue';
 
-// Temporary fake auth (frontend only)
 const isAdminAuthenticated = () => {
-  return localStorage.getItem('admin') === 'true'
+  return localStorage.getItem('admin') === 'true' && Boolean(localStorage.getItem('token'))
 }
 
 const routes = [
@@ -32,17 +31,23 @@ const routes = [
   {
     path: '/upload',
     name: 'upload',
-    component: UploadDocuments
+    component: UploadDocuments,
+    meta: { requiresAdmin: true }
   },
   {
     path: '/comments',
     name: 'comments',
-    component: CommentsComponents
+    component: CommentsComponents,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginComponent
   },
   {
     path: '/Login',
-    name: 'Login',
-    component: LoginComponent
+    redirect: '/login'
   },
   {
     path: '/about',
@@ -57,7 +62,8 @@ const routes = [
   {
     path: '/marks',
     name: 'marks',
-    component: ViewMarks
+    component: ViewMarks,
+    meta: { requiresAuth: true }
   },
   {
     path: '/upload-marks',
@@ -79,7 +85,7 @@ const routes = [
     path: '/admin',
     name: 'admin-dashboard',
     component: AdminDashboard,
-    //meta: { requiresAdmin: true }
+    meta: { requiresAdmin: true }
   },
   {
     path: '/:pathMatch(.*)*',
@@ -96,6 +102,8 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAdmin && !isAdminAuthenticated()) {
     next('/admin/login')
+  } else if (to.meta.requiresAuth && !localStorage.getItem('token')) {
+    next('/login')
   } else {
     next()
   }

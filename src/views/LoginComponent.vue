@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <form class="login-card">
+    <form class="login-card" @submit.prevent="login">
       <h2 class="title">User Login</h2>
 
       <div class="form-group">
@@ -10,6 +10,9 @@
           id="email"
           name="Email"
           placeholder="Enter your email"
+          v-model="email"
+          autocomplete="username"
+          required
         />
       </div>
 
@@ -20,18 +23,43 @@
           id="password"
           name="Password"
           placeholder="Enter your password"
+          v-model="password"
+          autocomplete="current-password"
+          required
         />
       </div>
 
       <button type="submit" class="login-btn">Login</button>
+      <p v-if="error" class="error" role="alert">{{ error }}</p>
     </form>
   </div>
 </template>
 
-<script>
-export default {
-  name: "LoginComponent",
+<script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { api } from "@/services/api";
+
+const email = ref("");
+const password = ref("");
+const error = ref("");
+const router = useRouter();
+
+const login = async () => {
+  error.value = "";
+  try {
+    const { data } = await api.post("/auth/login", { email: email.value, password: password.value });
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+    localStorage.setItem("role", data.user.role);
+    if (data.user.role === "admin") localStorage.setItem("admin", "true");
+    else localStorage.removeItem("admin");
+    router.push(data.user.role === "admin" ? "/admin" : "/marks");
+  } catch (err) {
+    error.value = err.response?.data?.message || "Unable to sign in.";
+  }
 };
+
 </script>
 
 <style scoped>
@@ -103,5 +131,9 @@ export default {
 
 .login-btn:hover {
   background: #4338ca;
+}
+
+.error {
+  color: #b42318;
 }
 </style>

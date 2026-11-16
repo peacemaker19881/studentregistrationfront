@@ -7,7 +7,7 @@
     <input type="date" v-model="news_date" />
     <input type="file" @change="handleFile" />
 
-    <button @click="submitNews">Post News</button>
+    <button @click="submitNews" :disabled="loading">{{ loading ? "Posting..." : "Post News" }}</button>
 
     <p v-if="success" class="success">{{ success }}</p>
     <p v-if="error" class="error">{{ error }}</p>
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { api } from "@/services/api";
 
 export default {
   name: "PostNews",
@@ -26,7 +26,8 @@ export default {
       news_date: "",
       image: null,
       success: "",
-      error: ""
+      error: "",
+      loading: false
     };
   },
   methods: {
@@ -46,19 +47,11 @@ export default {
       formData.append("news_date", this.news_date);
       if (this.image) formData.append("image", this.image);
 
+      this.loading = true;
       try {
-        await axios.post(
-          "http://localhost:4000/api/news",
-          formData,
-          {
-            headers: {
-              Authorization: localStorage.getItem("token"),
-              "Content-Type": "multipart/form-data"
-            }
-          }
-        );
+        const { data } = await api.post("/news", formData);
 
-        this.success = "News posted successfully ✔";
+        this.success = data.message;
         this.error = "";
 
         // clear form
@@ -67,7 +60,9 @@ export default {
         this.news_date = "";
         this.image = null;
       } catch (err) {
-        this.error = "Failed to post news";
+        this.error = err.response?.data?.message || "Failed to post news.";
+      } finally {
+        this.loading = false;
       }
     }
   }

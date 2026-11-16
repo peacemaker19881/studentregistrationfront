@@ -15,8 +15,9 @@
       <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
     </div>
 
-    <!-- TRAINER VIEW COMMENTS -->
-    <div v-if="role === 'trainer'" class="comments-list">
+    <!-- ADMIN VIEW COMMENTS -->
+    <div v-if="role === 'admin'" class="comments-list">
+      <p v-if="errorMsg" class="error" role="alert">{{ errorMsg }}</p>
       <div v-if="comments.length === 0" class="empty">
         No comments available
       </div>
@@ -31,7 +32,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { api } from "@/services/api";
 
 export default {
   name: "Comments",
@@ -45,7 +46,7 @@ export default {
     };
   },
   mounted() {
-    if (this.role === "trainer") {
+    if (this.role === "admin") {
       this.fetchComments();
     }
   },
@@ -57,37 +58,22 @@ export default {
       }
 
       try {
-        await axios.post(
-          "http://localhost:4000/api/comments",
-          { message: this.message },
-          {
-            headers: {
-              Authorization: localStorage.getItem("token")
-            }
-          }
-        );
+        await api.post("/comments", { message: this.message });
 
         this.successMsg = "Comment sent successfully 👍";
         this.errorMsg = "";
         this.message = "";
       } catch (err) {
-        this.errorMsg = "Failed to send comment";
+        this.errorMsg = err.response?.data?.message || "Failed to send comment.";
       }
     },
 
     async fetchComments() {
       try {
-        const res = await axios.get(
-          "http://localhost:4000/api/comments",
-          {
-            headers: {
-              Authorization: localStorage.getItem("token")
-            }
-          }
-        );
-        this.comments = res.data;
+        const res = await api.get("/comments");
+        this.comments = res.data.comments;
       } catch (err) {
-        console.error(err);
+        this.errorMsg = err.response?.data?.message || "Failed to load comments.";
       }
     },
 

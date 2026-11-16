@@ -16,12 +16,16 @@
 
       <input type="file" @change="handleFile" required /><br><br>
 
-      <button class="btn-submit" type="submit">Upload Document</button>
+      <button class="btn-submit" type="submit" :disabled="uploading">{{ uploading ? "Uploading..." : "Upload Document" }}</button>
+      <p v-if="message" role="status">{{ message }}</p>
+      <p v-if="error" role="alert">{{ error }}</p>
     </form>
   </div>
 </template>
 
 <script>
+import { api } from "@/services/api";
+
 export default {
   name: "UploadDocuments",
   data() {
@@ -30,15 +34,34 @@ export default {
         title: "",
         course: "",
         file: null
-      }
+      },
+      uploading: false,
+      message: "",
+      error: ""
     };
   },
   methods: {
     handleFile(event) {
       this.document.file = event.target.files[0];
     },
-    submitForm() {
-      console.log("Document data to send:", this.document);
+    async submitForm() {
+      if (!this.document.file) return;
+      this.uploading = true;
+      this.message = "";
+      this.error = "";
+      const formData = new FormData();
+      formData.append("title", this.document.title);
+      formData.append("course", this.document.course);
+      formData.append("file", this.document.file);
+      try {
+        const { data } = await api.post("/documents", formData);
+        this.message = data.message;
+        this.document = { title: "", course: "", file: null };
+      } catch (error) {
+        this.error = error.response?.data?.message || "Document upload failed.";
+      } finally {
+        this.uploading = false;
+      }
     }
   }
 };

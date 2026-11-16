@@ -31,13 +31,15 @@
       >
         <li><router-link to="/">Home</router-link></li>
         <li><router-link to="/login">Login</router-link></li>
-        <li><router-link to="/Admin">Post News</router-link></li>
-        <li><router-link to="/comments">Comments</router-link></li>
+        <li v-if="role === 'admin'"><router-link to="/admin">Admin</router-link></li>
+        <li v-else-if="role === 'student'"><router-link to="/comments">Comments</router-link></li>
+        <li v-else><router-link to="/login">Login</router-link></li>
         <li><router-link to="/student">Register Student</router-link></li>
-        <li><router-link to="/upload">Upload</router-link></li>
+        <li v-if="role === 'admin'"><router-link to="/upload">Upload</router-link></li>
         <li><router-link to="/Documents">Documents</router-link></li>
-        <li><router-link to="/marks">View Marks</router-link></li>
-        <li><router-link to="/upload-marks">Upload Marks</router-link></li>
+        <li v-if="role"><router-link to="/marks">View Marks</router-link></li>
+        <li v-if="role === 'admin'"><router-link to="/upload-marks">Upload Marks</router-link></li>
+        <li v-if="role"><button class="sign-out" @click="logout">Sign out</button></li>
         <li><router-link to="/about">About Us</router-link></li>
       </ul>
     </nav>
@@ -57,10 +59,20 @@ import FooterComponent from "./components/FooterComponent.vue";
 import logo from "@/assets/bumba.png";
 
 const open = ref(false);
+const role = ref(localStorage.getItem("role"));
 const breakpoint = 768; // px - match desktop breakpoint
 
 const toggle = () => { open.value = !open.value };
 const close = () => { open.value = false };
+const logout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  localStorage.removeItem("role");
+  localStorage.removeItem("admin");
+  role.value = "";
+  close();
+  window.location.assign("/");
+};
 
 const handleResize = () => {
   // Ensure mobile menu closes automatically when switching to desktop width
@@ -85,6 +97,7 @@ onBeforeUnmount(() => {
 const route = useRoute();
 watch(() => route.fullPath, () => {
   close();
+  role.value = localStorage.getItem("role");
 });
 </script>
 
@@ -208,6 +221,14 @@ watch(() => route.fullPath, () => {
   font-weight: 500;
   transition: background 0.2s ease;
   font-size: 1rem;
+}
+.sign-out {
+  border: 0;
+  padding: 8px 0;
+  background: transparent;
+  color: white;
+  font: inherit;
+  cursor: pointer;
 }
 .nav-links li a:active,
 .nav-links li a:focus,

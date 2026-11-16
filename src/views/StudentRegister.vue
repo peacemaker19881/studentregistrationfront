@@ -65,6 +65,11 @@
         <input type="email" v-model="form.email" required />
       </div>
 
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" v-model="form.password" minlength="8" autocomplete="new-password" required />
+      </div>
+
       <button class="btn-submit">Register Student</button>
 
       <p v-if="success" class="success">{{ success }}</p>
@@ -75,10 +80,12 @@
 
 <script setup>
 import { reactive, ref } from "vue";
-import axios from "axios";
+import { useRouter } from "vue-router";
+import { api } from "@/services/api";
 
 const success = ref("");
 const error = ref("");
+const router = useRouter();
 
 const form = reactive({
   fullname: "",
@@ -88,28 +95,19 @@ const form = reactive({
   parent_phone: "",
   trade: "",
   level: "",
-  email: ""
+  email: "",
+  password: ""
 });
 
 const submitForm = async () => {
   try {
-    await axios.post(
-      "http://localhost:4000/api/students",
-      form,
-      {
-        headers: {
-          Authorization: localStorage.getItem("token")
-        }
-      }
-    );
-
-    success.value = "Student registered successfully ✔";
+    await api.post("/auth/register", form);
+    success.value = "Registration complete. You can now sign in.";
     error.value = "";
-
-    // reset form
     Object.keys(form).forEach(key => (form[key] = ""));
+    setTimeout(() => router.push("/login"), 1200);
   } catch (err) {
-    error.value = "Failed to register student";
+    error.value = err.response?.data?.message || "Failed to register student.";
     success.value = "";
   }
 };
