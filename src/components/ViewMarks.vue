@@ -14,7 +14,7 @@
     <section class="filters" aria-label="Filter student marks">
       <label class="search-field">
         <span>Search</span>
-        <input v-model="search" type="search" placeholder="Student or subject" />
+        <input v-model="search" type="search" placeholder="Student by RegistrationNumber" />
       </label>
       <label>
         <span>Level</span>
@@ -91,7 +91,7 @@ const filteredMarks = computed(() => {
 
   return marks.value.filter(mark => {
     const matchesSearch = !query ||
-      `${mark.fullname} ${mark.subject}`.toLowerCase().includes(query);
+      `${mark.registration_number} ${mark.fullname} ${mark.subject}`.toLowerCase().includes(query);
     const matchesLevel = !selectedLevel.value || mark.level === selectedLevel.value;
     const matchesTerm = !selectedTerm.value || mark.term === selectedTerm.value;
 
@@ -104,7 +104,7 @@ const fetchMarks = async () => {
   errorMessage.value = "";
 
   try {
-    const response = await axios.get("http://localhost:4000/api/marks", {
+    const response = await axios.get("http://localhost:4000/api/marks/my", {
       headers: { Authorization: localStorage.getItem("token") }
     });
     const records = Array.isArray(response.data) ? response.data : response.data?.marks;

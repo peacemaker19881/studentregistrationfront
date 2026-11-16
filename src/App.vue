@@ -37,6 +37,7 @@
         <li><router-link to="/upload">Upload</router-link></li>
         <li><router-link to="/Documents">Documents</router-link></li>
         <li><router-link to="/marks">View Marks</router-link></li>
+        <li><router-link to="/upload-marks">Upload Marks</router-link></li>
         <li><router-link to="/about">About Us</router-link></li>
       </ul>
     </nav>

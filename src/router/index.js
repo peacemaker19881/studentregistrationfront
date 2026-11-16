@@ -10,6 +10,7 @@ import AdminDashboard from '@/views/Admin/AdminDashboard.vue';
 import LoginComponent from '@/views/LoginComponent.vue';
 import ViewDocuments from '@/components/ViewDocuments.vue';
 import ViewMarks from '@/components/ViewMarks.vue';
+import UploadMarks from '@/components/UploadMarks.vue';
 import NotFound from '@/views/NotFound.vue';
 
 // Temporary fake auth (frontend only)
@@ -57,6 +58,12 @@ const routes = [
     path: '/marks',
     name: 'marks',
     component: ViewMarks
+  },
+  {
+    path: '/upload-marks',
+    name: 'upload-marks',
+    component: UploadMarks,
+    meta: { requiresAdmin: true }
   },
     {
     path: '/admin/login',
