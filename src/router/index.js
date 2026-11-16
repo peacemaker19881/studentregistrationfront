@@ -9,6 +9,7 @@ import AdminLogin from '@/views/Admin/AdminLogin.vue';
 import AdminDashboard from '@/views/Admin/AdminDashboard.vue';
 import LoginComponent from '@/views/LoginComponent.vue';
 import ViewDocuments from '@/components/ViewDocuments.vue';
+import ViewMarks from '@/components/ViewMarks.vue';
 import NotFound from '@/views/NotFound.vue';
 
 // Temporary fake auth (frontend only)
@@ -51,6 +52,11 @@ const routes = [
     path: '/Documents',
     name: 'Documents',
     component: ViewDocuments
+  },
+  {
+    path: '/marks',
+    name: 'marks',
+    component: ViewMarks
   },
     {
     path: '/admin/login',
